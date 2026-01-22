@@ -17,7 +17,13 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@typescript-eslint/eslint-plugin": "^8.53.1",
+    "@typescript-eslint/parser": "^8.53.1",
     "babel-plugin-react-compiler": "1.0.0",
+    "eslint-plugin-import-x": "^4.16.1",
+    "eslint-plugin-react-hooks-extra": "^2.7.2",
+    "eslint-plugin-react-x": "^2.7.2",
+    "eslint-plugin-react-you-might-not-need-an-effect": "^0.8.5",
     "tailwindcss": "^4",
     "typescript": "^5"
   },

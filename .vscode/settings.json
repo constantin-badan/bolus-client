@@ -1,0 +1,21 @@
+{
+  "oxc.enable": true,
+  "oxc.lint.run": "onType",
+  "oxc.typeAware": true,
+  "oxc.tsConfigPath": "./tsconfig.json",
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit",
+    "source.fixAll.oxc": "explicit"
+  },
+  "files.watcherExclude": {
+    "**/routeTree.gen.ts": true
+  },
+  "search.exclude": {
+    "**/routeTree.gen.ts": true
+  },
+  "files.readonlyInclude": {
+    "**/routeTree.gen.ts": true
+  },
+  "typescript.experimental.useTsgo": false
+}

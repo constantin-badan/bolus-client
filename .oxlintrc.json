@@ -1,0 +1,163 @@
+{
+  "ignorePatterns": [
+    "src/api/Api.ts",
+    "src/api/data-contracts.ts",
+    "src/api/http-client.ts"
+  ],
+  "jsPlugins": [
+    "eslint-plugin-i18next",
+    "eslint-plugin-playwright",
+    "@tanstack/eslint-plugin-query",
+    "@tanstack/eslint-plugin-router"
+  ],
+  "plugins": [
+    "eslint",
+    "unicorn",
+    "typescript",
+    "import",
+    "oxc",
+    "promise",
+    "react",
+    "react-perf"
+  ],
+  "rules": {
+    "eslint/no-unused-vars": "error",
+    "eslint/no-negated-condition": "error",
+    "eslint/no-await-in-loop": "error",
+    "eslint/max-params": ["error", { "max": 3 }],
+    "eslint/no-console": "off",
+    "eslint/no-debugger": "off",
+    "eslint/complexity": ["error", { "max": 15, "variant": "modified" }],
+    "unicorn/no-null": "error",
+    "unicorn/prefer-array-find": "error",
+    "unicorn/no-array-reduce": "error",
+    "unicorn/no-array-for-each": "off",
+    "unicorn/no-unnecessary-await": "error",
+    "unicorn/no-negation-in-equality-check": "error",
+    "unicorn/no-nested-ternary": "error",
+    "unicorn/consistent-function-scoping": "error",
+    "unicorn/catch-error-name": "error",
+    "unicorn/no-typeof-undefined": "error",
+    "unicorn/explicit-length-check": "error",
+    "unicorn/filename-case": "error",
+    "unicorn/no-useless-spread": "error",
+    "react/no-array-index-key": "error",
+    "react/jsx-key": "error",
+    "react/jsx-max-depth": ["error", { "max": 7 }],
+    "@typescript-eslint/no-unsafe-assignment": "error",
+    "@typescript-eslint/no-unsafe-argument": "error",
+    "@typescript-eslint/no-unsafe-member-access": "error",
+    "@typescript-eslint/no-unsafe-return": "error",
+    "@typescript-eslint/no-floating-promises": "error",
+    "@typescript-eslint/no-confusing-void-expression": "error",
+    "@typescript-eslint/no-misused-spread": "error",
+    "@typescript-eslint/unbound-method": "error",
+    "@typescript-eslint/promise-function-async": "error",
+    "@typescript-eslint/no-explicit-any": "error",
+    "@typescript-eslint/no-unsafe-call": "error",
+    "@typescript-eslint/require-await": "error",
+    "@typescript-eslint/await-thenable": "error",
+    "@typescript-eslint/prefer-promise-reject-errors": "error",
+    "@typescript-eslint/no-unnecessary-type-assertion": "error",
+    "@typescript-eslint/no-meaningless-void-operator": "error",
+    "@typescript-eslint/explicit-module-boundary-types": "error",
+    "@typescript-eslint/no-import-type-side-effects": "error",
+    "@typescript-eslint/return-await": ["error", "always"],
+    "@typescript-eslint/no-duplicate-type-constituents": "error",
+    "@typescript-eslint/no-implied-eval": "error",
+
+    "@typescript-eslint/no-non-null-assertion": "error",
+    "@typescript-eslint/array-type": "error",
+    "@typescript-eslint/no-array-delete": "error",
+    "@typescript-eslint/no-base-to-string": "error",
+    "@typescript-eslint/no-unsafe-function-type": "error",
+    "@typescript-eslint/no-unsafe-unary-minus": "error",
+    "@typescript-eslint/only-throw-error": "error",
+    "@typescript-eslint/no-for-in-array": "error",
+    "@typescript-eslint/no-redundant-type-constituents": "error",
+    "@typescript-eslint/no-unnecessary-boolean-literal-compare": "error",
+    "@typescript-eslint/no-unnecessary-template-expression": "error",
+    "@typescript-eslint/no-unnecessary-type-arguments": "error",
+    "@typescript-eslint/prefer-return-this-type": "error",
+    "@typescript-eslint/related-getter-setter-pairs": "error",
+    "@typescript-eslint/require-array-sort-compare": "error",
+    "@typescript-eslint/restrict-plus-operands": "error",
+    "@typescript-eslint/use-unknown-in-catch-callback-variable": "error",
+    "@typescript-eslint/switch-exhaustiveness-check": [
+      "error",
+      {
+        "allowDefaultCaseForExhaustiveSwitch": false,
+        "considerDefaultExhaustiveForUnions": false,
+        "requireDefaultForNonUnion": true
+      }
+    ],
+    "@typescript-eslint/no-misused-promises": [
+      "error",
+      {
+        "checksVoidReturn": {
+          "attributes": false
+        }
+      }
+    ],
+    "@typescript-eslint/restrict-template-expressions": [
+      "error",
+      {
+        "allowAny": false,
+        "allowBoolean": false,
+        "allowNullish": false,
+        "allowNumber": true,
+        "allowRegExp": false
+      }
+    ],
+    "@typescript-eslint/ban-ts-comment": [
+      "error",
+      {
+        "ts-check": true,
+        "ts-expect-error": true,
+        "ts-ignore": true,
+        "ts-nocheck": true
+      }
+    ],
+    "react-hooks/exhaustive-deps": "error",
+    "react-hooks/rules-of-hooks": "error",
+    "react/only-export-components": [
+      "error",
+      { "allowExportNames": ["metadata"] }
+    ],
+    "import/no-cycle": "error",
+    "import/consistent-type-specifier-style": "error",
+    "i18next/no-literal-string": "error",
+    "playwright/expect-expect": "error",
+    "playwright/max-nested-describe": "error",
+    "playwright/missing-playwright-await": "error",
+    "playwright/no-conditional-expect": "error",
+    "playwright/no-conditional-in-test": "error",
+    "playwright/no-element-handle": "error",
+    "playwright/no-eval": "error",
+    "playwright/no-focused-test": "error",
+    "playwright/no-force-option": "error",
+    "playwright/no-nested-step": "error",
+    "playwright/no-networkidle": "error",
+    "playwright/no-page-pause": "error",
+    "playwright/no-skipped-test": "error",
+    "playwright/no-wait-for-selector": "error",
+    "playwright/no-wait-for-timeout": "error",
+    "playwright/prefer-web-first-assertions": "error",
+    "playwright/no-useless-not": "error",
+    "playwright/no-useless-await": "error",
+    "playwright/no-unused-locators": "error",
+    "@tanstack/query/exhaustive-deps": "error",
+    "@tanstack/query/infinite-query-property-order": "error",
+    "@tanstack/query/mutation-property-order": "error",
+    "@tanstack/query/no-rest-destructuring": "error",
+    "@tanstack/query/no-unstable-deps": "error",
+    "@tanstack/query/no-void-query-fn": "error",
+    "@tanstack/query/stable-query-client": "error",
+    "@tanstack/router/create-route-property-order": "error",
+    "oxc/no-barrel-file": "error",
+    "oxc/no-accumulating-spread": "error",
+    "react_perf/jsx-no-jsx-as-prop": "error",
+    "react_perf/jsx-no-new-array-as-prop": "error",
+    "react_perf/jsx-no-new-object-as-prop": "error"
+  }
+}
