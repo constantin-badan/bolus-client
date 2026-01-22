@@ -11,6 +11,8 @@
     "lint": "oxlint --type-aware --quiet && eslint"
   },
   "dependencies": {
+    "clsx": "^2.1.1",
+    "date-fns": "^4.1.0",
     "next": "16.1.4",
     "oxlint": "1.41.0",
     "oxlint-tsgolint": "0.11.1",
