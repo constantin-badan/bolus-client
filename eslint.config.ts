@@ -17,6 +17,7 @@ const config = [
       "src/api/Api.ts",
       "src/api/data-contracts.ts",
       "**/*.gen.ts",
+      ".next/**",
     ],
   },
   {
@@ -97,15 +98,6 @@ const config = [
     settings: {
       "import-x/parsers": {
         "@typescript-eslint/parser": [".ts", ".tsx"],
-      },
-      "import-x/resolver": {
-        typescript: {
-          alwaysTryTypes: true,
-        },
-      },
-      "import/resolver": {
-        node: true,
-        typescript: true,
       },
       react: {
         version: "detect",

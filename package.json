@@ -5,7 +5,10 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "postinstall": "lefthook install",
+    "typecheck": "tsgo --noEmit",
+    "lint": "oxlint --type-aware --quiet && eslint"
   },
   "dependencies": {
     "next": "16.1.4",
@@ -21,6 +24,7 @@
     "@types/react-dom": "19.2.3",
     "@typescript-eslint/eslint-plugin": "8.53.1",
     "@typescript-eslint/parser": "8.53.1",
+    "@typescript/native-preview": "^7.0.0-dev.20260122.3",
     "babel-plugin-react-compiler": "1.0.0",
     "eslint-plugin-import-x": "4.16.1",
     "eslint-plugin-react-hooks-extra": "2.7.2",
