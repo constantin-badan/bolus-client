@@ -86,7 +86,7 @@ export function MonthStats({
               {greenDays}/{totalDays}
             </p>
           </div>
-          <div className="h-12 w-12 rounded-full bg-green-500 flex items-center justify-center">
+          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-green-500">
             <span className="text-xl text-white">✓</span>
           </div>
         </div>
@@ -101,7 +101,7 @@ export function MonthStats({
               {redDays}
             </p>
           </div>
-          <div className="h-12 w-12 rounded-full bg-red-500 flex items-center justify-center">
+          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-red-500">
             <span className="text-xl text-white">✗</span>
           </div>
         </div>
@@ -117,7 +117,7 @@ export function MonthStats({
                 {skippedDays}
               </p>
             </div>
-            <div className="h-12 w-12 rounded-full bg-amber-500 flex items-center justify-center">
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-amber-500">
               <span className="text-xl text-white">−</span>
             </div>
           </div>

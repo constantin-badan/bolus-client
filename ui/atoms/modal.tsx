@@ -72,7 +72,7 @@ export function ModalContent({
   return (
     <RACModal
       className={clsx(
-        "max-h-[90vh] w-full overflow-y-auto rounded-2xl bg-white p-6 shadow-2xl border border-zinc-200 dark:bg-zinc-900 dark:border-zinc-800",
+        "max-h-[90vh] w-full overflow-y-auto rounded-2xl border border-zinc-200 bg-white p-6 shadow-2xl dark:border-zinc-800 dark:bg-zinc-900",
         contentSizes[size],
       )}
     >
@@ -133,8 +133,12 @@ interface ModalCloseProps extends Omit<RACButtonProps, "className"> {
 }
 
 const closeVariants: Record<CloseVariant, string> = {
-  icon: "ml-auto rounded-lg px-4 py-1.5 text-sm font-medium text-zinc-600 transition-all duration-200 hover:bg-zinc-100 hover:text-zinc-900 active:scale-95 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-200",
-  text: "ml-auto rounded-lg px-4 py-2 text-sm font-medium text-zinc-600 transition-all duration-200 hover:bg-zinc-100 hover:text-zinc-900 active:scale-95 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-200",
+  icon: clsx(
+    "ml-auto rounded-lg px-4 py-1.5 text-sm font-medium text-zinc-600 transition-all duration-200 hover:bg-zinc-100 hover:text-zinc-900 active:scale-95 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-200",
+  ),
+  text: clsx(
+    "ml-auto rounded-lg px-4 py-2 text-sm font-medium text-zinc-600 transition-all duration-200 hover:bg-zinc-100 hover:text-zinc-900 active:scale-95 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-200",
+  ),
 };
 
 export function ModalClose({

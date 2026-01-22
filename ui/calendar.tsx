@@ -82,7 +82,7 @@ export function Calendar({
         {DAYS_OF_WEEK.map((day) => (
           <div
             key={day}
-            className="text-center text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400"
+            className="text-center text-xs font-semibold tracking-wider text-zinc-500 uppercase dark:text-zinc-400"
           >
             {day}
           </div>
