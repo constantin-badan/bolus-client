@@ -117,7 +117,7 @@
     "react-hooks/rules-of-hooks": "error",
     "react/only-export-components": [
       "error",
-      { "allowExportNames": ["metadata"] }
+      { "allowExportNames": ["metadata", "dynamic"] }
     ],
     "import/no-cycle": "error",
     "import/consistent-type-specifier-style": "error",

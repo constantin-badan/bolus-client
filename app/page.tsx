@@ -1,6 +1,8 @@
 import { getHabitEntries } from "./actions";
 import { HabitTrackerClient } from "./habit-tracker-client";
 
+export const dynamic = "force-dynamic";
+
 export default async function Home(): Promise<React.JSX.Element> {
   const initialData = await getHabitEntries();
 
