@@ -1,0 +1,11 @@
+pre-commit:
+  parallel: true
+  commands:
+    prettier:
+      run: bun prettier . --check --experimental-cli
+    typecheck:
+      run: bun typecheck
+    oxlint:
+      run: bun oxlint --quiet --type-aware
+    eslint:
+      run: bun eslint
