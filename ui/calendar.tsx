@@ -1,5 +1,6 @@
 "use client";
 
+import type { Habit, HabitEntry } from "~/app/actions";
 import {
   format,
   startOfMonth,
@@ -16,17 +17,23 @@ import {
 } from "date-fns";
 import { ReactElement } from "react";
 import { Button } from "./atoms/button";
+import {
+  ModalTrigger,
+  ModalOverlay,
+  ModalContent,
+  ModalDialog,
+} from "./atoms/modal";
 import { CalendarDay } from "./calendar-day";
+import { HabitSettingsModal } from "./habit-settings-modal";
+import { MonthStats } from "./month-stats";
 
-type DayStatus = "green" | "red" | "neutral" | "skipped";
-type HabitsData = Record<string, DayStatus>;
-
-const DAYS_OF_WEEK = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+const DAYS_OF_WEEK = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
 interface CalendarProps {
+  personId: string;
+  habit: Habit;
   currentMonth: Date;
-  habitsData: HabitsData;
-  onStatusChange: (date: Date, status: DayStatus) => void;
+  entries: Record<string, HabitEntry>;
   onMonthChange: (date: Date) => void;
 }
 
@@ -42,15 +49,16 @@ function isDayEditable(date: Date): boolean {
 }
 
 export function Calendar({
+  personId,
+  habit,
   currentMonth,
-  habitsData,
-  onStatusChange,
+  entries,
   onMonthChange,
 }: CalendarProps): ReactElement {
   const monthStart = startOfMonth(currentMonth);
   const monthEnd = endOfMonth(currentMonth);
-  const calendarStart = startOfWeek(monthStart);
-  const calendarEnd = endOfWeek(monthEnd);
+  const calendarStart = startOfWeek(monthStart, { weekStartsOn: 1 });
+  const calendarEnd = endOfWeek(monthEnd, { weekStartsOn: 1 });
 
   const days = eachDayOfInterval({ start: calendarStart, end: calendarEnd });
 
@@ -63,54 +71,84 @@ export function Calendar({
   };
 
   return (
-    <div className="w-full max-w-2xl">
-      {/* Month Navigation */}
-      <div className="mb-4 flex items-center justify-between">
-        <Button variant="secondary" onPress={handlePrevMonth}>
-          ← Previous
-        </Button>
-        <h2 className="text-2xl font-semibold text-zinc-900 dark:text-zinc-50">
-          {format(currentMonth, "MMMM yyyy")}
-        </h2>
-        <Button variant="secondary" onPress={handleNextMonth}>
-          Next →
-        </Button>
-      </div>
-
-      {/* Days of Week Header */}
-      <div className="mb-3 grid grid-cols-7 gap-3">
-        {DAYS_OF_WEEK.map((day) => (
-          <div
-            key={day}
-            className="text-center text-xs font-semibold tracking-wider text-zinc-500 uppercase dark:text-zinc-400"
-          >
-            {day}
+    <div className="space-y-4">
+      <div className="grid gap-4 lg:grid-cols-[1fr,auto]">
+        {/* Calendar */}
+        <div className="w-full rounded-lg border border-zinc-200 bg-white p-4 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+          {/* Habit header with settings */}
+          <div className="mb-4 flex items-center justify-between">
+            <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
+              {habit.name}
+            </h3>
+            <ModalTrigger>
+              <Button variant="secondary" size="sm">
+                ⚙️
+              </Button>
+              <ModalOverlay>
+                <ModalContent>
+                  <ModalDialog>
+                    {({ close }) => (
+                      <HabitSettingsModal habit={habit} close={close} />
+                    )}
+                  </ModalDialog>
+                </ModalContent>
+              </ModalOverlay>
+            </ModalTrigger>
           </div>
-        ))}
-      </div>
 
-      {/* Calendar Grid */}
-      <div className="grid grid-cols-7 gap-3">
-        {days.map((day) => {
-          const dateKey = getDateKey(day);
-          const status = habitsData[dateKey] || "neutral";
-          const isCurrentMonthDay = isSameMonth(day, currentMonth);
-          const isEditable = isDayEditable(day);
-          const isToday = isTodayDate(day);
+          {/* Month Navigation */}
+          <div className="mb-4 flex items-center justify-between">
+            <Button variant="secondary" size="sm" onPress={handlePrevMonth}>
+              ←
+            </Button>
+            <h4 className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+              {format(currentMonth, "MMMM yyyy")}
+            </h4>
+            <Button variant="secondary" size="sm" onPress={handleNextMonth}>
+              →
+            </Button>
+          </div>
 
-          return (
-            <CalendarDay
-              key={dateKey}
-              date={day}
-              dayNumber={day.getDate()}
-              status={status}
-              isCurrentMonth={isCurrentMonthDay}
-              isEditable={isEditable}
-              isToday={isToday}
-              onStatusChange={onStatusChange}
-            />
-          );
-        })}
+          {/* Days of Week Header */}
+          <div className="mb-2 grid grid-cols-7 gap-2">
+            {DAYS_OF_WEEK.map((day) => (
+              <div
+                key={day}
+                className="text-center text-xs font-semibold tracking-wider text-zinc-500 uppercase dark:text-zinc-400"
+              >
+                {day}
+              </div>
+            ))}
+          </div>
+
+          {/* Calendar Grid */}
+          <div className="grid grid-cols-7 gap-2">
+            {days.map((day) => {
+              const dateKey = getDateKey(day);
+              const entry = entries[dateKey];
+              const isCurrentMonthDay = isSameMonth(day, currentMonth);
+              const isEditable = isDayEditable(day);
+              const isToday = isTodayDate(day);
+
+              return (
+                <CalendarDay
+                  key={dateKey}
+                  personId={personId}
+                  habit={habit}
+                  date={day}
+                  dayNumber={day.getDate()}
+                  entry={entry}
+                  isCurrentMonth={isCurrentMonthDay}
+                  isEditable={isEditable}
+                  isToday={isToday}
+                />
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Stats */}
+        <MonthStats currentMonth={currentMonth} entries={entries} />
       </div>
     </div>
   );

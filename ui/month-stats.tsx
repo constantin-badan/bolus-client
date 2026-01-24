@@ -1,3 +1,4 @@
+import type { HabitEntry } from "~/app/actions";
 import {
   startOfMonth,
   endOfMonth,
@@ -8,12 +9,9 @@ import {
 } from "date-fns";
 import { ReactElement } from "react";
 
-type DayStatus = "green" | "red" | "neutral" | "skipped";
-type HabitsData = Record<string, DayStatus>;
-
 interface MonthStatsProps {
   currentMonth: Date;
-  habitsData: HabitsData;
+  entries: Record<string, HabitEntry>;
 }
 
 function getDateKey(date: Date): string {
@@ -22,7 +20,7 @@ function getDateKey(date: Date): string {
 
 export function MonthStats({
   currentMonth,
-  habitsData,
+  entries,
 }: MonthStatsProps): ReactElement {
   const monthStart = startOfMonth(currentMonth);
   const monthEnd = endOfMonth(currentMonth);
@@ -37,22 +35,26 @@ export function MonthStats({
   // Exclude skipped days from stats
   const eligibleDays = pastDays.filter((day) => {
     const dateKey = getDateKey(day);
-    return habitsData[dateKey] !== "skipped";
+    const entry = entries[dateKey];
+    return entry?.status !== "skipped";
   });
 
   const greenDays = eligibleDays.filter((day) => {
     const dateKey = getDateKey(day);
-    return habitsData[dateKey] === "green";
+    const entry = entries[dateKey];
+    return entry?.status === "green";
   }).length;
 
   const redDays = eligibleDays.filter((day) => {
     const dateKey = getDateKey(day);
-    return habitsData[dateKey] === "red";
+    const entry = entries[dateKey];
+    return entry?.status === "red";
   }).length;
 
   const skippedDays = pastDays.filter((day) => {
     const dateKey = getDateKey(day);
-    return habitsData[dateKey] === "skipped";
+    const entry = entries[dateKey];
+    return entry?.status === "skipped";
   }).length;
 
   const totalDays = eligibleDays.length;

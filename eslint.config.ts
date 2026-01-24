@@ -47,7 +47,7 @@ const config = [
     rules: {
       "@typescript-eslint/consistent-type-assertions": [
         "error",
-        { assertionStyle: "never" },
+        { assertionStyle: "as", objectLiteralTypeAssertions: "allow" },
       ],
       "@typescript-eslint/no-unnecessary-condition": "off", //useeffect bug
       "@typescript-eslint/no-invalid-void-type": "error",
