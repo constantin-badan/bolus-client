@@ -36,6 +36,7 @@ export interface HabitEntry {
   status: DayStatus;
   amountSpent: string | null;
   availableBalance: string | null;
+  notes: string | null;
 }
 
 export interface WeekendChoice {
@@ -96,6 +97,7 @@ export async function getHabitEntriesForPerson(
         status: entry.status as DayStatus,
         amountSpent: entry.amountSpent,
         availableBalance: entry.availableBalance,
+        notes: entry.notes,
       };
     }
   }
@@ -173,14 +175,98 @@ async function calculateAvailableBalance(
   return dailyLimit + carryOver;
 }
 
+// Get available balance for a budget habit on a given date (public API)
+export async function getAvailableBalance(
+  personId: string,
+  habitId: string,
+  date: string,
+): Promise<number> {
+  // Get habit info
+  const [habit] = await db
+    .select()
+    .from(habits)
+    .where(eq(habits.id, habitId))
+    .limit(1);
+
+  if (!habit) {
+    throw new Error("Habit not found");
+  }
+
+  return await calculateAvailableBalance(personId, habitId, date, {
+    id: habit.id,
+    name: habit.name,
+    type: habit.type as HabitType,
+    settings: habit.settings as BudgetHabitSettings,
+    order: habit.order,
+  });
+}
+
+// Get available balances for all days in a month for a budget habit
+export async function getMonthAvailableBalances(
+  personId: string,
+  habitId: string,
+  yearMonth: string, // Format: "2025-01"
+): Promise<Record<string, number>> {
+  const [habit] = await db
+    .select()
+    .from(habits)
+    .where(eq(habits.id, habitId))
+    .limit(1);
+
+  if (!habit) {
+    return {};
+  }
+
+  if (habit.type !== "budget") {
+    return {};
+  }
+
+  const habitData: Habit = {
+    id: habit.id,
+    name: habit.name,
+    type: habit.type as HabitType,
+    settings: habit.settings as BudgetHabitSettings,
+    order: habit.order,
+  };
+
+  // Calculate balances for each day of the month
+  const [year, month] = yearMonth.split("-").map(Number);
+  if (!year || !month) return {};
+  const daysInMonth = new Date(year, month, 0).getDate();
+
+  // Calculate all balances in parallel
+  const balancePromises = Array.from({ length: daysInMonth }, async (_, i) => {
+    const day = i + 1;
+    const date = `${yearMonth}-${String(day).padStart(2, "0")}`;
+    const balance = await calculateAvailableBalance(
+      personId,
+      habitId,
+      date,
+      habitData,
+    );
+    return { date, balance };
+  });
+
+  const balanceResults = await Promise.all(balancePromises);
+  const balances: Record<string, number> = {};
+  for (const { date, balance } of balanceResults) {
+    balances[date] = balance;
+  }
+
+  return balances;
+}
+
 // Update or create habit entry
 export async function updateHabitEntry(
   personId: string,
   habitId: string,
   date: string,
   status: DayStatus,
-  amountSpent?: number,
+  options?: { amountSpent?: number; notes?: string },
 ): Promise<void> {
+  const amountSpent = options?.amountSpent;
+  const notes = options?.notes;
+
   // Get habit info
   const [habit] = await db
     .select()
@@ -230,6 +316,7 @@ export async function updateHabitEntry(
         status: finalStatus,
         amountSpent: amountSpent?.toString(),
         availableBalance: availableBalance?.toString(),
+        notes: notes ?? undefined,
         updatedAt: new Date(),
       })
       .where(eq(habitEntries.id, existing.id));
@@ -242,6 +329,7 @@ export async function updateHabitEntry(
       status: finalStatus,
       amountSpent: amountSpent?.toString(),
       availableBalance: availableBalance?.toString(),
+      notes: notes ?? undefined,
     });
   }
 

@@ -35,11 +35,13 @@ const overlayVariants: Record<OverlayVariant, string> = {
 
 export function ModalOverlay({
   variant = "blur",
+  isDismissable = true,
   children,
   ...props
 }: ModalOverlayExtendedProps): ReactElement {
   return (
     <RACModalOverlay
+      isDismissable={isDismissable}
       {...props}
       className={clsx(
         "fixed inset-0 z-50 flex items-center justify-center",

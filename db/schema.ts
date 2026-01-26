@@ -52,6 +52,7 @@ export const habitEntries = pgTable(
     // For budget habits
     amountSpent: numeric("amount_spent", { precision: 10, scale: 2 }),
     availableBalance: numeric("available_balance", { precision: 10, scale: 2 }),
+    notes: text("notes"),
     createdAt: timestamp("created_at").notNull().defaultNow(),
     updatedAt: timestamp("updated_at").notNull().defaultNow(),
   },

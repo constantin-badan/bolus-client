@@ -34,6 +34,7 @@ interface CalendarDayProps {
   isCurrentMonth: boolean;
   isEditable: boolean;
   isToday: boolean;
+  computedBalance?: number | undefined;
 }
 
 interface DayModalContentProps {
@@ -43,6 +44,7 @@ interface DayModalContentProps {
   dayNumber: number;
   entry: HabitEntry | undefined;
   close: () => void;
+  computedBalance?: number | undefined;
 }
 
 function BudgetDayModal({
@@ -51,6 +53,7 @@ function BudgetDayModal({
   date,
   entry,
   close,
+  computedBalance,
 }: Omit<DayModalContentProps, "dayNumber">): ReactElement {
   const dateStr = format(date, "yyyy-MM-dd");
   const dayOfWeek = getDay(date); // 0 = Sunday, 6 = Saturday
@@ -60,10 +63,14 @@ function BudgetDayModal({
   const [amountSpent, setAmountSpent] = useState(() =>
     entry?.amountSpent ? parseFloat(entry.amountSpent) : 0,
   );
+  const [notes, setNotes] = useState(entry?.notes ?? "");
   const [weekendChoice, setWeekendChoiceState] = useState<
     "saturday" | "sunday" | undefined
   >(undefined);
   const [, startTransition] = useTransition();
+
+  // Use computed balance from server or fallback to daily limit
+  const availableBalance = computedBalance ?? settings.dailyLimit;
 
   // Load weekend choice if this is a weekend day
   useEffect(() => {
@@ -77,13 +84,10 @@ function BudgetDayModal({
 
   const handleSave = (): void => {
     startTransition(async () => {
-      await updateHabitEntry(
-        personId,
-        habit.id,
-        dateStr,
-        "neutral",
+      await updateHabitEntry(personId, habit.id, dateStr, "neutral", {
         amountSpent,
-      );
+        notes,
+      });
       close();
     });
   };
@@ -101,10 +105,6 @@ function BudgetDayModal({
       setWeekendChoiceState(day);
     });
   };
-
-  const availableBalance = entry?.availableBalance
-    ? parseFloat(entry.availableBalance)
-    : settings.dailyLimit;
 
   const dayLimit =
     isWeekend && weekendChoice === (dayOfWeek === 6 ? "saturday" : "sunday")
@@ -158,16 +158,14 @@ function BudgetDayModal({
           {/* Balance display */}
           <div className="rounded-lg bg-zinc-100 p-3 dark:bg-zinc-800">
             <p className="text-xs text-zinc-600 dark:text-zinc-400">
-              Daily Limit
+              Available Budget
             </p>
             <p className="text-lg font-bold text-zinc-900 dark:text-zinc-50">
-              {dayLimit} MDL
+              {availableBalance.toFixed(2)} MDL
             </p>
-            {entry && (
-              <p className="mt-1 text-xs text-zinc-600 dark:text-zinc-400">
-                Available: {availableBalance.toFixed(2)} MDL
-              </p>
-            )}
+            <p className="mt-1 text-xs text-zinc-600 dark:text-zinc-400">
+              Base limit: {dayLimit} MDL
+            </p>
           </div>
 
           {/* Amount input */}
@@ -187,6 +185,26 @@ function BudgetDayModal({
               }}
               min={0}
               step={0.01}
+              className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100"
+            />
+          </div>
+
+          {/* Notes input */}
+          <div>
+            <label
+              htmlFor="notes"
+              className="mb-1 block text-sm font-medium text-zinc-700 dark:text-zinc-300"
+            >
+              Notes
+            </label>
+            <textarea
+              id="notes"
+              value={notes}
+              onChange={(e) => {
+                setNotes(e.target.value);
+              }}
+              rows={3}
+              placeholder="Add any notes about this day..."
               className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none dark:border-zinc-600 dark:bg-zinc-800 dark:text-zinc-100"
             />
           </div>
@@ -323,6 +341,7 @@ export function CalendarDay({
   isCurrentMonth,
   isEditable,
   isToday,
+  computedBalance,
 }: CalendarDayProps): ReactElement {
   const status = entry?.status || "neutral";
 
@@ -400,6 +419,7 @@ export function CalendarDay({
                   date={date}
                   entry={entry}
                   close={close}
+                  computedBalance={computedBalance}
                 />
               ) : (
                 <BooleanDayModal

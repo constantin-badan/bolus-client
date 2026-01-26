@@ -15,7 +15,7 @@ import {
   subMonths,
   startOfDay,
 } from "date-fns";
-import { ReactElement } from "react";
+import { ReactElement, useState, useEffect, useTransition } from "react";
 import { Button } from "./atoms/button";
 import {
   ModalTrigger,
@@ -26,6 +26,7 @@ import {
 import { CalendarDay } from "./calendar-day";
 import { HabitSettingsModal } from "./habit-settings-modal";
 import { MonthStats } from "./month-stats";
+import { getMonthAvailableBalances } from "~/app/actions";
 
 const DAYS_OF_WEEK = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
@@ -55,6 +56,26 @@ export function Calendar({
   entries,
   onMonthChange,
 }: CalendarProps): ReactElement {
+  const [monthBalances, setMonthBalances] = useState<Record<string, number>>(
+    {},
+  );
+  const [, startTransition] = useTransition();
+
+  // Fetch available balances for budget habits when month changes
+  useEffect(() => {
+    if (habit.type === "budget") {
+      startTransition(async () => {
+        const yearMonth = format(currentMonth, "yyyy-MM");
+        const balances = await getMonthAvailableBalances(
+          personId,
+          habit.id,
+          yearMonth,
+        );
+        setMonthBalances(balances);
+      });
+    }
+  }, [habit.type, habit.id, personId, currentMonth]);
+
   const monthStart = startOfMonth(currentMonth);
   const monthEnd = endOfMonth(currentMonth);
   const calendarStart = startOfWeek(monthStart, { weekStartsOn: 1 });
@@ -129,6 +150,7 @@ export function Calendar({
               const isCurrentMonthDay = isSameMonth(day, currentMonth);
               const isEditable = isDayEditable(day);
               const isToday = isTodayDate(day);
+              const computedBalance = monthBalances[dateKey];
 
               return (
                 <CalendarDay
@@ -141,6 +163,7 @@ export function Calendar({
                   isCurrentMonth={isCurrentMonthDay}
                   isEditable={isEditable}
                   isToday={isToday}
+                  computedBalance={computedBalance}
                 />
               );
             })}
